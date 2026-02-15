@@ -7,6 +7,7 @@ import Assessments from './pages/Assessments'
 import Resources from './pages/Resources'
 import Profile from './pages/Profile'
 import TestChecklist from './pages/TestChecklist'
+import Proof from './pages/Proof'
 import Ship from './pages/Ship'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/prp/07-test" element={<TestChecklist />} />
+      <Route path="/prp/proof" element={<Proof />} />
       <Route path="/prp/08-ship" element={<Ship />} />
       <Route path="/app" element={<DashboardLayout />}>
         <Route index element={<Dashboard />} />

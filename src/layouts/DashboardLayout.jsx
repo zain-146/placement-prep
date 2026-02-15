@@ -25,10 +25,9 @@ function DashboardLayout() {
                   to={item.to}
                   end={item.end}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
-                      isActive
-                        ? 'bg-primary-500 text-white'
-                        : 'text-primary-200 hover:bg-primary-800 hover:text-white'
+                    `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors duration-200 ${isActive
+                      ? 'bg-primary-500 text-white'
+                      : 'text-primary-200 hover:bg-primary-800 hover:text-white'
                     }`
                   }
                 >
@@ -48,6 +47,30 @@ function DashboardLayout() {
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-primary-900">Placement Prep</h2>
             <div className="flex items-center gap-4">
+              {(() => {
+                const checklistSaved = localStorage.getItem("prp_test_checklist")
+                const proofSaved = localStorage.getItem("prp_final_submission")
+                const isChecklistReady = checklistSaved && JSON.parse(checklistSaved).length === 10
+
+                let isProofReady = false
+                if (proofSaved) {
+                  const links = JSON.parse(proofSaved)
+                  const isValid = (u) => { try { return !!new URL(u) } catch { return false } }
+                  if (isValid(links.lovable) && isValid(links.github) && isValid(links.deployed)) isProofReady = true
+                }
+
+                return isChecklistReady && isProofReady ? (
+                  <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold uppercase tracking-wider border border-emerald-200">
+                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                    Shipped
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-[10px] font-bold uppercase tracking-wider border border-amber-200">
+                    <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
+                    In Progress
+                  </div>
+                )
+              })()}
               <div className="w-10 h-10 bg-primary-200 rounded-full flex items-center justify-center">
                 <User className="w-5 h-5 text-primary-700" />
               </div>

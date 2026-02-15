@@ -77,8 +77,8 @@ function TestChecklist() {
                                     key={item.id}
                                     onClick={() => toggleItem(item.id)}
                                     className={`flex items-start gap-4 p-4 rounded-xl border cursor-pointer transition-all ${checked.includes(item.id)
-                                            ? "bg-emerald-50 border-emerald-200"
-                                            : "bg-white border-gray-100 hover:border-gray-200"
+                                        ? "bg-emerald-50 border-emerald-200"
+                                        : "bg-white border-gray-100 hover:border-gray-200"
                                         }`}
                                 >
                                     <div className="mt-1">
@@ -105,13 +105,13 @@ function TestChecklist() {
                         </div>
 
                         <button
-                            onClick={() => navigate('/prp/08-ship')}
-                            className={`w-full mt-6 flex items-center justify-center gap-2 font-bold py-4 rounded-xl transition-all ${passedCount === 10
-                                    ? "bg-primary-600 hover:bg-primary-700 text-white shadow-lg"
+                            onClick={() => navigate('/prp/proof')}
+                            className={`w-full mt-6 flex items-center justify-center gap-2 font-bold py-4 rounded-xl transition-all shadow-lg ${passedCount === 10
+                                    ? "bg-primary-600 hover:bg-primary-700 text-white"
                                     : "bg-gray-100 text-gray-400 cursor-not-allowed"
                                 }`}
                         >
-                            Proceeed to Ship
+                            Next: Provide Proof Artifacts
                             <ArrowRight className="w-5 h-5" />
                         </button>
                     </div>
