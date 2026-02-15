@@ -6,11 +6,15 @@ import Practice from './pages/Practice'
 import Assessments from './pages/Assessments'
 import Resources from './pages/Resources'
 import Profile from './pages/Profile'
+import TestChecklist from './pages/TestChecklist'
+import Ship from './pages/Ship'
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/prp/07-test" element={<TestChecklist />} />
+      <Route path="/prp/08-ship" element={<Ship />} />
       <Route path="/app" element={<DashboardLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="practice" element={<Practice />} />
