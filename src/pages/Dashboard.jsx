@@ -112,10 +112,21 @@ function Dashboard() {
 
             {/* Preparation Checklists */}
             <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-              <h3 className="text-xl font-bold text-primary-900 mb-6 flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-primary-500" />
-                Preparation Checklist
-              </h3>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-primary-900 flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-primary-500" />
+                  Preparation Checklist
+                </h3>
+                <button
+                  onClick={() => {
+                    const text = activeEntry.checklist.map(r => `${r.roundTitle}:\n${r.items.map(i => `- ${i}`).join('\n')}`).join('\n\n')
+                    navigator.clipboard.writeText(text)
+                  }}
+                  className="text-xs font-bold text-primary-600 hover:text-primary-700 bg-primary-50 px-3 py-1.5 rounded-lg border border-primary-100 transition-colors"
+                >
+                  Copy Checklist
+                </button>
+              </div>
               <div className="space-y-6">
                 {activeEntry.checklist.map((round) => (
                   <div key={round.roundTitle}>
@@ -128,6 +139,33 @@ function Dashboard() {
                         </div>
                       ))}
                     </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Interview Questions */}
+            <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-primary-900 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-primary-500" />
+                  Top Interview Questions
+                </h3>
+                <button
+                  onClick={() => {
+                    const text = activeEntry.questions.map((q, i) => `${i + 1}. ${q}`).join('\n')
+                    navigator.clipboard.writeText(text)
+                  }}
+                  className="text-xs font-bold text-primary-600 hover:text-primary-700 bg-primary-50 px-3 py-1.5 rounded-lg border border-primary-100 transition-colors"
+                >
+                  Copy Questions
+                </button>
+              </div>
+              <div className="space-y-3">
+                {activeEntry.questions.map((q, idx) => (
+                  <div key={idx} className="p-4 bg-gray-50 rounded-xl border border-gray-100 text-gray-700 text-sm leading-relaxed">
+                    <span className="font-bold text-primary-500 mr-2">Q{idx + 1}.</span>
+                    {q}
                   </div>
                 ))}
               </div>
@@ -148,8 +186,8 @@ function Dashboard() {
                           key={skill}
                           onClick={() => handleToggleSkill(skill)}
                           className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all border ${activeEntry.skillConfidenceMap[skill] === "know"
-                              ? "bg-emerald-500 text-white border-emerald-500 shadow-sm"
-                              : "bg-white text-gray-600 border-gray-200 hover:border-emerald-300"
+                            ? "bg-emerald-500 text-white border-emerald-500 shadow-sm"
+                            : "bg-white text-gray-600 border-gray-200 hover:border-emerald-300"
                             }`}
                         >
                           {skill}
@@ -172,8 +210,8 @@ function Dashboard() {
                     key={h.id}
                     onClick={() => setActiveEntry(h)}
                     className={`w-full text-left p-4 rounded-xl border transition-all ${activeEntry.id === h.id
-                        ? "bg-primary-50 border-primary-200 ring-1 ring-primary-200"
-                        : "border-gray-100 hover:border-gray-200"
+                      ? "bg-primary-50 border-primary-200 ring-1 ring-primary-200"
+                      : "border-gray-100 hover:border-gray-200"
                       }`}
                   >
                     <div className="font-bold text-sm text-primary-900 truncate">
