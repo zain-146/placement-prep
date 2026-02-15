@@ -45,9 +45,9 @@ export const analyzeJD = (jdText, company = "", role = "") => {
     role,
     jdText,
     extractedSkills,
-    roundMapping: generateRoundMapping(extractedSkills),
+    roundMapping: generateRoundMapping(extractedSkills, company),
     checklist: generateChecklist(extractedSkills),
-    plan7Days: generate7DayPlan(extractedSkills),
+    plan7Days: generate7DayPlan(extractedSkills, company),
     questions: generateQuestions(extractedSkills),
     baseScore,
     skillConfidenceMap: {}, // Empty initially
@@ -66,40 +66,63 @@ const calculateScore = (skills) => {
   const total = Object.values(skills).flat().length
   if (total === 0) return 0
   // Basic heuristic: 10 points per skill, max 100
-  return Math.min(100, total * 8) 
+  return Math.min(100, total * 8)
 }
 
 export const updateFinalScore = (entry) => {
   const skills = Object.values(entry.extractedSkills).flat()
   if (skills.length === 0) return 0
-  
+
   const knownCount = skills.filter(s => entry.skillConfidenceMap[s] === "know").length
   const ratio = knownCount / skills.length
-  
+
   // finalScore changes based on skillConfidenceMap
   // We keep it proportional to baseScore but boosted by confidence
   const confidenceBoost = ratio * 20 // Max 20 points boost
   return Math.min(100, entry.baseScore + confidenceBoost)
 }
 
-const generateRoundMapping = (skills) => [
-  { roundTitle: "Online Assessment", focusAreas: ["Aptitude", "Core CS", "Coding"], whyItMatters: "First hurdle to filter candidates." },
-  { roundTitle: "Technical Interview 1", focusAreas: skills.languages.slice(0, 2).concat(skills.coreCS.slice(0, 2)), whyItMatters: "Checks fundamental technical depth." }
-]
+const generateRoundMapping = (skills, company = "") => {
+  const comp = company || "Target Company"
+  return [
+    {
+      roundTitle: "Online Assessment",
+      focusAreas: ["Aptitude", "Core CS", "Coding"],
+      whyItMatters: `Standard first-level filter for ${comp}.`
+    },
+    {
+      roundTitle: `${comp} Technical Interview 1`,
+      focusAreas: [...skills.languages.slice(0, 2), ...skills.coreCS.slice(0, 2)],
+      whyItMatters: "Verifies technical depth in core technologies mentioned in the JD."
+    },
+    {
+      roundTitle: `${comp} System Design`,
+      focusAreas: ["Hld/Lld", ...skills.data.slice(0, 1)],
+      whyItMatters: "Checks scalability and architectural thinking."
+    }
+  ]
+}
 
 const generateChecklist = (skills) => [
-  { roundTitle: "Preparation", items: ["Review Resume", "Brush up on " + (skills.languages[0] || "Coding"), "Mock Interviews"] }
+  { roundTitle: "Resume & Portfolio", items: ["Update Projects section", "Highlight " + (skills.web[0] || "relevant") + " experience", "Check GitHub links"] },
+  { roundTitle: "Technical Prep", items: ["Brush up on " + (skills.languages[0] || "Coding"), "Practice Mock Interviews", "Review Core CS Fundamentals"] }
 ]
 
-const generate7DayPlan = (skills) => [
-  { day: 1, focus: "Fundamentals", tasks: ["Revise " + (skills.coreCS[0] || "Data Structures"), "Practice 2 LC Easy"] },
-  { day: 7, focus: "Final Review", tasks: ["Mock Interview", "Company Research"] }
-]
+const generate7DayPlan = (skills, company = "") => {
+  const comp = company || "Target Company"
+  return [
+    { day: 1, focus: "Day 1: Fundamentals", tasks: ["Revise " + (skills.coreCS[0] || "Data Structures"), "Practice 2 Easy LeetCode"] },
+    { day: 3, focus: `Day 3: ${comp} Specifics`, tasks: ["Research " + comp + " recent interview patterns", "Deep dive into " + (skills.web[0] || "relevant tech")] },
+    { day: 7, focus: "Day 7: Mock & Review", tasks: ["Full length mock interview", "Company research & values"] }
+  ]
+}
 
 const generateQuestions = (skills) => [
-  "Explain one of your major projects.",
-  "What is the time complexity of your favorite sorting algorithm?",
-  `How do you handle ${skills.web[0] || 'difficult requirements'} in a project?`
+  "Explain one of your major projects in detail.",
+  "How would you optimize a slow database query in " + (skills.data[0] || "SQL") + "?",
+  `Describe your experience working with ${skills.web[0] || 'Frontend frameworks'}.`,
+  "Tell me about a time you handled a difficult technical challenge.",
+  "Which design patterns are you most comfortable with?"
 ]
 
 export const saveHistory = (entry) => {
